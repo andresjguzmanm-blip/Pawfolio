@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Log in · Pawfolio{% endblock %}
+
+{% block content %}
+<div class="stage">
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-6 content-col">
+        <span class="eyebrow">Pawfolio</span>
+        <h1 class="headline">Log <em>in</em></h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="form-alert {{ category }}" role="alert">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+
+        <form method="post" class="login-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email"
+                   autocomplete="email" required autofocus>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"
+                   autocomplete="current-password" required>
+          </div>
+
+          <div class="actions">
+            <button class="btn-pine" type="submit">Continue</button>
+            <a class="btn-clay" href="{{ url_for('inicio') }}">Cancel</a>
+          </div>
+        </form>
+
+        <p class="login-hint">
+          I do not have an account yet!
+          <a href="{{ url_for('register') }}">Create one</a>
+        </p>
+      </div>
+
+      <div class="col-lg-6 art-col">
+        <div class="ring" aria-hidden="true"></div>
+        <div class="blob">
+          {% include "illustration_husky.html" %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
