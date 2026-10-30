@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Sign in · Pawfolio {% endblock %}
+
+{% block content %}
+<div class="stage">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-7 content-col">
+                <span class="eyebrow">Pawfolio</span>
+                <h1 class="headline">Sign<em>in</em></h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="form-alert error" role="alert">
+                            <ul class="mb-0 ps-3">
+                                {% for category, message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form method="post" class="register-form" novalidate>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="field" style="--i:0">
+                                <label for="first_name">First name</label>
+                                <input type="text" id="first_name" name="first_name" value="{{ form.get('first_name', '') }}" autocomplete="given_name" maxlength="50" required autofocus>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field" style=--i:1>
+                                <laber for="last_name">Last name</laber>
+                                <input type="text" id="last_name" name="last_name" value="{{ form.get('last_name','') }}" autocomplete="family-name" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col_12">
+                            <div class="field" style="--1:2">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" value="{{ form.get('email', '') }}" autocomplete="email" maxlength="120" required>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="field" style="--i:3">
+                                <label for="password">Password</label>
+                                <div class="pw-wrap">
+                                    <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" required>
+                                    <button type="button" class="pw-toggle" id="pwToggle" aria-label="Show password">Show</button>
+                                </div>
+                                <div class="strength" aria-hidden="true"><span id="strengthBar"></span></div>
+                                <small class="strength-text" id="strengthText">At least 8 characters</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field" style="--i:4">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone" value="{{ form.get('phone', '') }}" autocomplete="tel" maxlength="20" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field" style="--i:5">
+                                <label for="zipcode">Zipcode</label>
+                                <input type="text" id="zipcode" name="zipcode" value="{{ form.get('zipcode', '') }}" autocomplete="postal-code" maxlength="10" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-pine" type="submit">Continue</button>
+                        <a class="btn-clay" href="{{ url_for('inicio') }}">Cancel</a>
+                    </div>
+                </form>
+
+                <p class="login-hint">
+                    I do have an account!
+                    <a href="{{url_for('login') }}">Log in</a>
+                </p>
+            </div>
+            <div class="col-lg-5 art-col">
+                <div class="ring" aria-hidden="true"></div>
+                <div class="blob">
+                    {% include "illustration_pug.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const pw= document.getElementById('password');
+    const toggle= document.getElementById('pwToggle');
+    toggle.addEventListener('click', () => {const hidden = pw.type === 'password'; pw.type = hidden ? 'text' : 'password'; toggle.textContent = hidden ? 'Hide' : 'Show'; toggle.setAttribute('aria-label', hidden ? 'Hide password' : 'Show password');});
+
+    const bar= document.getElementById('strengthBar');
+    const txt= document.getElementById('strengthText');
+    const levels = [
+        { w: '8%', c: '#C8553D', t: 'Very weak' },
+        { w: '30%', c: '#E3A98F', t: 'Weak' },
+        { w: '55%', c: '#DCA23C', t: 'Enough' },
+        { w: '80%', c: '#93A88E', t: 'Good' },
+        {w: '100%', c: '#3B5443', T: 'Excelent'}
+    ];
+    pw.addEventListener('input', () => {
+        const v = pw.value;
+        if (!v) { bar.style.width = '0'; txt.textContent = 'At leat 8 characters'; return; }
+        let score = 0;
+        if (v.length >= 8) score++;
+        if (v.length >= 12) score++;
+        if (/[a-z]/.test(v) && /[A-Z]/.test(v)) score++;
+        if (/\d/.test(v)) score++;
+        if (/[^A-Za-z0-9]/.test(v)) score++;
+        const n = levels[Math.min(score, 5) - 1] || levels[0];
+        bar.style.width = n.w;
+        bar.style.background = n.c;
+        txt.textContent = n.t;
+    });
+</script>
+{% endblock %}
